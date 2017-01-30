@@ -3,21 +3,33 @@ import strava_common.Authorize as authorize
 import datetime
 
 username= "joshua_haley"
-start=datetime.datetime(2017,1,1,0, 0, 0)
-
+start=datetime.datetime(2017,1,1,0,0,0)
+type ="Ride"
+activities = []
 
 def main():
+    global activities
     client = authorize.get_authorized_client(username)
     athlete = client.get_athlete()
     print("{id} ".format(id=athlete.username))
-    activities = client.get_activities(after=start)
-    for activity in activities:
+    get_activities(client)
+
+    f = open_file()
+    print_records(f, activities)
+
+
+def get_activities(client):
+    global activities
+    acts = client.get_activities(after=start)
+    for activity in acts:
         print(activity)
+        if activity.type == type:
+            activities.append(activity)
 
 def open_file():
     print("Not yet Implemented")
 
-def print_record():
+def print_records(file, activities):
     print("Not yet Implemented")
 
 if __name__ == "__main__":
