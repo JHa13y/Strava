@@ -24,7 +24,7 @@ def main():
     for act in activities:
         print("processing:" + str(act))
         if act.device_name == device_name:
-            if act.gear_id != argyle_id:
+            if act.gear_id != argyle_id and act.id != 620617856: #special case
                 client.update_activity(act.id, gear_id=argyle_id)
 
 
