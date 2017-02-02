@@ -8,6 +8,9 @@ class ActivityManager:
     client = None
     Activities ={}
 
+    def __init__(self, client):
+        self.client = client
+
     def get_activities(self, before=None, after=None, bike_id=None, device_name = None, type = "Ride", commute_filter = None):
         """Returns all activities within the specified time range for an optionally specified bike"""
         #TODO: Cache this result...
