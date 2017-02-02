@@ -17,7 +17,7 @@ def get_access_token(username, client):
     #TODO: Lookup Cached Result
     server_thread = multiprocessing.Process(target=setup_server)
     server_thread.start()
-
+    time.sleep(1)
     authorize_url = client.authorization_url(client_id=13057, scope="write", redirect_uri='http://127.0.0.1:5000/authorized')
 
     webbrowser.open(authorize_url);
