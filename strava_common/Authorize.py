@@ -25,12 +25,13 @@ def get_access_token(username, client):
     code = b'No Authorized'
     while code == b'No Authorized':
         try:
-            response = requests.get("http://127.0.0.1:5000/code")
+            response = requests.get('http://127.0.0.1:5000/code', timeout=0.1)
             if response.status_code == 200:
                 code = response.content
+        except requests.exceptions.ReadTimeout:
+            print("waiting for code")
         except requests.exceptions.HTTPError:
             print("waiting for code")
-
 
     server_thread.terminate()
 

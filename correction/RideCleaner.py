@@ -34,7 +34,7 @@ class RideCleaner:
         self.client = client
         self.act_manager = ActivityManager(client)
 
-    def change_bike(self, client, bike_id, device_name, before=None, after=None):
+    def change_bike(self, bike_id, device_name, before=None, after=None):
 
         """Scrubs history by pulling down all activities.  It then will set any ride using the
          specified device to use the specified bike"""
@@ -46,7 +46,7 @@ class RideCleaner:
                 self.act_manager.update_activity(act.id, gear_id=bike_id)
 
 
-    def set_commutes(self, client, bike_id, device_name, before=None, after=None):
+    def set_commutes(self, bike_id, device_name, before=None, after=None):
         """tags all rides using the specified bike and device to a commute"""
         acts = self.act_manager.get_activities(bike_id=bike_id, device_name=device_name, after=after, before=before, commute_filter=False)
         for act in acts:
