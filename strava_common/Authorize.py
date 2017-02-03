@@ -5,6 +5,7 @@ import multiprocessing
 import webbrowser
 import requests
 import time
+import configuration
 
 
 def get_authorized_client(username):
@@ -14,7 +15,10 @@ def get_authorized_client(username):
     return client
 
 def get_access_token(username, client):
-    #TODO: Lookup Cached Result
+    #Lookup Cached Result
+    if hasattr(configuration,username):
+        return getattr(configuration,username)
+
     server_thread = multiprocessing.Process(target=setup_server)
     server_thread.start()
     time.sleep(1)
@@ -36,7 +40,7 @@ def get_access_token(username, client):
     server_thread.terminate()
 
     access_token = client.exchange_code_for_token(client_id=13057,
-                                                  client_secret='b48d4a0be5e16f97b4e52060252afe4e5bf1293f',
+                                                  client_secret=configuration.client_secret,
                                                   code=code)
 
     #TODO: Save Client access Token

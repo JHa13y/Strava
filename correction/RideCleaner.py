@@ -21,8 +21,8 @@ def main():
         if b.name == "Blue Argyle":
             argyle_id = b.id
 
-    cleaner.change_bike(client, bike_id=argyle_id, device_name=device_name,after=start)
-    cleaner.set_commutes(client, bike_id=argyle_id, device_name=device_name, after=start)
+    cleaner.change_bike(bike_id=argyle_id, device_name=device_name,after=start)
+    cleaner.set_commutes(bike_id=argyle_id, device_name=device_name, after=start)
 
 
 class RideCleaner:
