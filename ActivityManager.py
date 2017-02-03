@@ -1,4 +1,3 @@
-import strava_common.Authorize as authorize
 import datetime
 
 """This module should get (and cache) activities from Strava"""
@@ -6,7 +5,7 @@ import datetime
 
 class ActivityManager:
     client = None
-    Activities ={}
+    activities_cache ={}
 
     def __init__(self, client):
         self.client = client
@@ -32,7 +31,11 @@ class ActivityManager:
 
     def get_detailed_activity(self, activity_id):
         #TODO:This is the spot for caching and retrieving cached results...
-        return self.client.get_activity(activity_id)
+        act = self.activities_cache.get(activity_id)
+        if act is None:
+            act = self.client.get_activity(activity_id)
+            self.activities_cache[act.id] = act
+        return act
 
 
     def update_activity(self, activity_id, name=None, activity_type=None,
@@ -40,5 +43,22 @@ class ActivityManager:
                             description=None):
         """Alias of the client updater so we can locally track changes to activities as well"""
         #TODO: Update local cached copy
-        self.client.update_activity(activity_id==activity_id, name=name, activity_type=activity_type, private=private,
+        act = self.activities_cache[activity_id]
+
+        if name is not None:
+            act.name =name
+        if activity_type is not None:
+            act.activity_type= activity_type
+        if commute is not None:
+            act.commute = commute
+        if private is not None:
+            act.private = private
+        if trainer is not None:
+            act.trainer = trainer
+        if gear_id is not None:
+            act.gear_id = gear_id
+        if description is not None:
+            act.description = description
+
+        self.client.update_activity(activity_id=activity_id, name=name, activity_type=activity_type, private=private,
                                commute=commute, trainer=trainer, gear_id=gear_id, description=description)
