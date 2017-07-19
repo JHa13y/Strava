@@ -46,6 +46,7 @@ def main():
         print('{:6.2f}'.format(dist) + " miles on " + bikes[b.id])
 
     print("Data Source: https://ecf.com/sites/ecf.com/files/ECF_CO2_WEB.pdf")
+    print("Script Source: https://github.com/JHa13y/Strava")
 
 if __name__ == "__main__":
     main();
