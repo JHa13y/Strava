@@ -10,7 +10,7 @@ class ActivityManager:
     def __init__(self, client):
         self.client = client
 
-    def get_activities(self, before=None, after=None, bike_id=None, device_name = None, type = "Ride", commute_filter = None):
+    def get_activities(self, before=None, after=None, bike_id=None, device_name = None, type = "Ride", commute_filter = None, distance_min=None):
         """Returns all activities within the specified time range for an optionally specified bike"""
         #TODO: Cache this result...
         activities = []
@@ -23,10 +23,11 @@ class ActivityManager:
             print("Processing Activity: " + str(activity))
             if activity.type == type and (bike_id is None or activity.gear_id == bike_id):
                 if (commute_filter is True and activity.commute is True) or commute_filter is None or (commute_filter is False and activity.commute is False):
-                    act = self.get_detailed_activity(activity.id)
-                    #TODO: This is the spot where I would cache a resol
-                    if device_name is None or act.device_name == device_name:
-                        activities.append(act)
+                    if distance_min is None or activity.distance.num > distance_min:
+                        act = self.get_detailed_activity(activity.id)
+                        #TODO: This is the spot where I would cache a resol
+                        if device_name is None or act.device_name == device_name:
+                            activities.append(act)
         return activities
 
     def get_detailed_activity(self, activity_id):
