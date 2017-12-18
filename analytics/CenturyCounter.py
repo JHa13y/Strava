@@ -18,15 +18,30 @@ def main():
     act_manager = ActivityManager(client)
     athlete = client.get_athlete()
 
-    centery_in_meters=160934
-    acts = act_manager.get_activities(after=start, distance_min=centery_in_meters);
+    century_in_meters=160934
+    metric_in_meters = 100000
+
+    acts = act_manager.get_activities(after=start, distance_min=metric_in_meters);
     count =1;
-    print("Century Stats since: " + str(start))
+    print("Century (>100mi) Stats since: " + str(start))
     acts.reverse()
     for act in acts:
         distance= act.distance._num / 1000 * 0.621371;
-        print(str(count) +": distance: " + '{:6.2f}'.format(distance) + " miles on Event: " + act.name + " " + str(act.start_date_local))
-        count = count +1
+        if distance >= 100:
+            print(str(count) +": distance: " + '{:6.2f}'.format(distance) + " miles on Event: " + act.name + " " + str(act.start_date_local))
+            count = count +1
+
+    count = 1
+
+
+    print("*********************************************************************")
+    print("Metric Centuries (>=62mi and <100mi) Stats since: " + str(start))
+    for act in acts:
+        distance = act.distance._num / 1000 * 0.621371
+        if distance < 100:
+            print(str(count) + ": distance: " + '{:6.2f}'.format(distance) + " miles on Event: " + act.name + " " + str(
+                act.start_date_local))
+            count = count + 1
 
     print("Script Source: https://github.com/JHa13y/Strava")
 
