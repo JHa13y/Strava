@@ -1,5 +1,5 @@
 import strava_common.Authorize as authorize
-import datetime
+import datetime, sys
 from ActivityManager import ActivityManager;
 
 """I annoyingly forget to change rides to the correct bike, but always record my commuting using my vivoactive HR
@@ -8,14 +8,12 @@ This automatically flags them as commutes"""
 username= "joshua_haley"
 type ="Ride"
 activities = []
-start=datetime.datetime(2017,1,1)
 device_name ='Garmin Vívoactive HR'
 car_co2_cost=271
 bike_co2_cost=21
 
-def main():
-
-    """Manual Testing of Scrubbing"""
+def main(year, month, day):
+    start = datetime.datetime(year, month, day)
     client = authorize.get_authorized_client(username)
     act_manager = ActivityManager(client)
     athlete = client.get_athlete()
@@ -56,4 +54,15 @@ def main():
     print("Script Source: https://github.com/JHa13y/Strava")
 
 if __name__ == "__main__":
-    main();
+    if len(sys.argv) < 2:
+        print("Please specify the year and optionally the month and day in the form YYYY MM DD")
+    year=None
+    month=1
+    day=1
+    if len(sys.argv) >= 2:
+        year = int(sys.argv[1])
+    if len(sys.argv) >= 3:
+        month = int(sys.argv[2])
+    if len(sys.argv) >= 4:
+        day = int(sys.argv[3])
+    main(year, month, day)
