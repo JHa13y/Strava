@@ -1,4 +1,5 @@
 import strava_common.Authorize as authorize
+from stravalib import unithelper
 import datetime, sys
 from ActivityManager import ActivityManager;
 
@@ -17,7 +18,6 @@ def main(year, month, day):
     act_manager = ActivityManager(client)
     athlete = client.get_athlete()
 
-    century_in_meters=160934
     metric_in_meters = 100000
 
     acts = act_manager.get_activities(after=start, distance_min=metric_in_meters);
@@ -25,7 +25,7 @@ def main(year, month, day):
     print("Century (>100mi) Stats since: " + str(start))
     acts.reverse()
     for act in acts:
-        distance= act.distance._num / 1000 * 0.621371;
+        distance= unithelper.miles(act.distance).get_num()
         if distance >= 100:
             print(str(count) +": distance: " + '{:6.2f}'.format(distance) + " miles on Event: " + act.name + " " + str(act.start_date_local))
             count = count +1
@@ -36,7 +36,7 @@ def main(year, month, day):
     print("*********************************************************************")
     print("Metric Centuries (>=62mi and <100mi) Stats since: " + str(start))
     for act in acts:
-        distance = act.distance._num / 1000 * 0.621371
+        distance = unithelper.miles(act.distance).get_num()
         if distance < 100:
             print(str(count) + ": distance: " + '{:6.2f}'.format(distance) + " miles on Event: " + act.name + " " + str(
                 act.start_date_local))

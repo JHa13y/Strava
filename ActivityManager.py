@@ -17,7 +17,7 @@ class ActivityManager:
         if before is None:
             before = datetime.datetime.now()
         if after is None:
-            after = datetime.datetime(1900,1,1)
+            after = datetime.datetime(2009,1,1)
         acts = self.client.get_activities(after=after, before=before)
         for activity in acts:
             print("Processing Activity: " + str(activity))
