@@ -20,7 +20,6 @@ class ActivityManager:
             after = datetime.datetime(2009,1,1)
         acts = self.client.get_activities(after=after, before=before)
         for activity in acts:
-            print("Processing Activity: " + str(activity))
             if activity.type == type and (bike_id is None or activity.gear_id == bike_id):
                 if (commute_filter is True and activity.commute is True) or commute_filter is None or (commute_filter is False and activity.commute is False):
                     if distance_min is None or activity.distance.num > distance_min:
