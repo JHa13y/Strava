@@ -42,9 +42,13 @@ class RideCleaner:
         if bike_id is None:
             return
         acts = self.act_manager.get_activities(device_name=device_name, after=after, before=before);
+        update =False
         for act in acts:
             if act.device_name == device_name and act.gear_id != bike_id:
                 self.act_manager.update_activity(act.id, gear_id=bike_id)
+                update = True
+        if update:
+            self.act_manager.serialize_activities_cache()
 
 
     def set_commutes(self, bike_id, device_name, before=None, after=None):
