@@ -49,6 +49,7 @@ def main(year, month, day):
 if __name__ == "__main__":
     if len(sys.argv) < 2:
         print("Please specify the year and optionally the month and day in the form YYYY MM DD")
+
     year=None
     month=1
     day=1

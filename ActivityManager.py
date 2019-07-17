@@ -73,12 +73,12 @@ class ActivityManager:
 
     def get_detailed_activity(self, activity_id):
         #TODO:This is the spot for caching and retrieving cached results...
-        act = self.activities_cache.get(activity_id)
-        if act is None:
-            act = self.client.get_activity(activity_id)
-            self.activities_cache[act.id] = act.raw
-        else:
-            act= Activity.deserialize(act)
+        #act = self.activities_cache.get(activity_id)
+        #if act is None:
+        act = self.client.get_activity(activity_id)
+        #    self.activities_cache[act.id] = act.to_dict()
+        # else:
+        #     act= Activity.deserialize(act)
         return act
 
 

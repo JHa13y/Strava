@@ -8,7 +8,7 @@ This automatically flags them as commutes"""
 username= "joshua_haley"
 type ="Ride"
 activities = []
-device_name ='Garmin Vívoactive HR'
+device_name ='Garmin fēnix 5 Plus'
 
 
 def main(year, month, day):

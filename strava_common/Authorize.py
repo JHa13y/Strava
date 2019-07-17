@@ -22,7 +22,10 @@ def get_access_token(username, client):
     server_thread = multiprocessing.Process(target=setup_server)
     server_thread.start()
     time.sleep(1)
-    authorize_url = client.authorization_url(client_id=13057, scope="write", redirect_uri='http://127.0.0.1:5000/authorized')
+    authorize_url = client.authorization_url(client_id=13057, scope=['read', 'read_all',
+                                    'profile:read_all', 'profile:write',
+                                    'activity:read', 'activity:read_all',
+                                    'activity:write'], redirect_uri='http://127.0.0.1:5000/authorized')
 
     webbrowser.open(authorize_url);
     time.sleep(2)
@@ -39,12 +42,12 @@ def get_access_token(username, client):
 
     server_thread.terminate()
 
-    access_token = client.exchange_code_for_token(client_id=13057,
+    token = client.exchange_code_for_token(client_id=13057,
                                                   client_secret=configuration.client_secret,
                                                   code=code)
 
     #TODO: Save Client access Token
-    return access_token
+    return token['access_token']
 
 
 def setup_server():
