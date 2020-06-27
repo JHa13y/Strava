@@ -33,7 +33,7 @@ def write_file():
     with open("activities.csv", "w", encoding="utf16") as f:
         f.write("RideName, Date, Distance (m), Avg Speed(m/s), Gear\n")
         for act in activities:
-            name = act.name
+            name = act.name.replace(",", " ")
             date = act.start_date_local
             speed = act.average_speed.num
             distance = act.distance.num
