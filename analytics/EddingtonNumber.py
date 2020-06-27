@@ -9,7 +9,9 @@ def main():
     df = pd.read_csv("activities.csv", encoding="utf16")
     for index, row in df.iterrows():
         distance = row[2]
-        miles = int(math.floor(distance * 0.00062137))
+        km = distance / 1000.0
+        miles = km /  1.609344
+        miles = int(math.floor(miles))
         for i in range(1, miles+1):
             count[i] = count[i] + 1
 
