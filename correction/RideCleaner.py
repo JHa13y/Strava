@@ -24,7 +24,35 @@ def main(year, month, day):
 
     cleaner.change_bike(bike_id=argyle_id, device_name=device_name,after=start)
     cleaner.set_commutes(bike_id=argyle_id, device_name=device_name, after=start)
+def fix_trainer(year, month, day):
+    """Manual Testing of Scrubbing"""
+    device_name ='Zwift'
+    start = datetime.datetime(year, month, day)
+    client = authorize.get_authorized_client(username)
+    cleaner = RideCleaner(client)
+    athlete = client.get_athlete()
+    bike_id = None
+    for b in athlete.bikes:
+        if b.name == "Basement POS":
+            bike_id = b.id
+            break
 
+    cleaner.change_bike(bike_id=bike_id, device_name=device_name,after=start)
+
+def fix_fl_rides(year, month, day):
+    """Manual Testing of Scrubbing"""
+    device_name = None
+    start = datetime.datetime(year, month, day)
+    client = authorize.get_authorized_client(username)
+    cleaner = RideCleaner(client)
+    athlete = client.get_athlete()
+    bike_id = None
+    for b in athlete.bikes:
+        if b.name == "Scwinn World Traveler":
+            bike_id = b.id
+            break
+
+    cleaner.change_bike(bike_id=bike_id, device_name=device_name,after=start, state='Florida')
 
 class RideCleaner:
 
@@ -35,16 +63,16 @@ class RideCleaner:
         self.client = client
         self.act_manager = ActivityManager(client)
 
-    def change_bike(self, bike_id, device_name, before=None, after=None):
+    def change_bike(self, bike_id, device_name, before=None, after=None, state=None):
 
         """Scrubs history by pulling down all activities.  It then will set any ride using the
          specified device to use the specified bike"""
         if bike_id is None:
             return
-        acts = self.act_manager.get_activities(device_name=device_name, after=after, before=before);
+        acts = self.act_manager.get_activities(device_name=device_name, after=after, before=before, state=state);
         update =False
         for act in acts:
-            if act.device_name == device_name and act.gear_id != bike_id:
+            if (act.device_name == device_name or device_name == None) and act.gear_id != bike_id:
                 self.act_manager.update_activity(act.id, gear_id=bike_id)
                 update = True
         if update:
@@ -72,4 +100,5 @@ if __name__ == "__main__":
         month = int(sys.argv[2])
     if len(sys.argv) >= 4:
         day = int(sys.argv[3])
-    main(year, month, day)
+    fix_trainer(year, month, day)
+    #fix_fl_rides(year, month, day)

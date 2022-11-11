@@ -1,8 +1,9 @@
 import datetime
 import pickle, argparse, os
 import strava_common.Authorize as authorize
-from stravalib.model import Activity
-import copy
+from geopy.geocoders import Nominatim
+# Initialize Nominatim API
+geolocator = Nominatim(user_agent="StravaActivities")
 
 """This module should get (and cache) activities from Strava"""
 
@@ -49,7 +50,8 @@ class ActivityManager:
         pass
 
 
-    def get_activities(self, before=None, after=None, bike_id=None, device_name = None, type = "Ride", commute_filter = None, distance_min=None):
+    def get_activities(self, before=None, after=None, bike_id=None, device_name = None, types = ["Ride", "VirtualRide"],
+                       commute_filter = None, distance_min=None, state=None):
         """Returns all activities within the specified time range for an optionally specified bike"""
         #TODO: Figure out a way to not relookup existing activities
         # old_before = datetime.datetime.strptime(self.activities_cache["before"])
@@ -61,7 +63,12 @@ class ActivityManager:
             after = datetime.datetime(2009,1,1)
         acts = self.client.get_activities(after=after, before=before)
         for activity in acts:
-            if activity.type == type and (bike_id is None or activity.gear_id == bike_id):
+            if activity.type in types and (bike_id is None or activity.gear_id == bike_id):
+                if state is not None:
+                    location = geolocator.reverse(str(activity.start_latlng.lat) + "," + str(activity.start_latlng.lon))
+                    if state not in location.address:
+                        continue
+
                 if (commute_filter is True and activity.commute is True) or commute_filter is None or (commute_filter is False and activity.commute is False):
                     if distance_min is None or activity.distance.num > distance_min:
                         act = self.get_detailed_activity(activity.id)

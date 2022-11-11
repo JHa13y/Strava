@@ -19,11 +19,11 @@ def main(year, month, day):
     athlete = client.get_athlete()
 
     metric_in_meters = 100000
-
-    acts = act_manager.get_activities(after=start, distance_min=metric_in_meters);
+    acts = client.get_activities(after=start)
+    #acts = act_manager.get_activities(after=start, distance_min=metric_in_meters);
     count =1;
     print("Century (>100mi) Stats since: " + str(start))
-    acts.reverse()
+    #acts.reverse()
     for act in acts:
         distance= unithelper.miles(act.distance).get_num()
         if distance >= 100:
