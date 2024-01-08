@@ -1,5 +1,8 @@
 import datetime
 import pickle, argparse, os
+import sys
+import time
+
 import strava_common.Authorize as authorize
 from geopy.geocoders import Nominatim
 # Initialize Nominatim API
@@ -64,7 +67,7 @@ class ActivityManager:
         acts = self.client.get_activities(after=after, before=before)
         for activity in acts:
             if activity.type in types and (bike_id is None or activity.gear_id == bike_id):
-                if state is not None:
+                if state is not None and activity.start_latlng is not None:
                     location = geolocator.reverse(str(activity.start_latlng.lat) + "," + str(activity.start_latlng.lon))
                     if state not in location.address:
                         continue
@@ -82,7 +85,15 @@ class ActivityManager:
         #TODO:This is the spot for caching and retrieving cached results...
         #act = self.activities_cache.get(activity_id)
         #if act is None:
-        act = self.client.get_activity(activity_id)
+        while True:
+            try:
+                act = self.client.get_activity(activity_id)
+                break
+            except Exception as e:
+                print(e, file=sys.stderr)
+                print("Reached Rate Limit, waiting 15 minutes")
+                time.sleep(60 * 15)
+                pass
         #    self.activities_cache[act.id] = act.to_dict()
         # else:
         #     act= Activity.deserialize(act)

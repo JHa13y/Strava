@@ -26,18 +26,19 @@ def main(year, month, day):
     cleaner.set_commutes(bike_id=argyle_id, device_name=device_name, after=start)
 def fix_trainer(year, month, day):
     """Manual Testing of Scrubbing"""
-    device_name ='Zwift'
+    device_names =['TrainerRoad','Zwift']
+
     start = datetime.datetime(year, month, day)
     client = authorize.get_authorized_client(username)
     cleaner = RideCleaner(client)
     athlete = client.get_athlete()
     bike_id = None
     for b in athlete.bikes:
-        if b.name == "Basement POS":
+        if b.name == "Scwinn World Traveler":
             bike_id = b.id
             break
-
-    cleaner.change_bike(bike_id=bike_id, device_name=device_name,after=start)
+    for device_name in device_names:
+        cleaner.change_bike(bike_id=bike_id, device_name=device_name,after=start)
 
 def fix_fl_rides(year, month, day):
     """Manual Testing of Scrubbing"""
@@ -48,7 +49,7 @@ def fix_fl_rides(year, month, day):
     athlete = client.get_athlete()
     bike_id = None
     for b in athlete.bikes:
-        if b.name == "Scwinn World Traveler":
+        if b.name == "Waterford1200":
             bike_id = b.id
             break
 

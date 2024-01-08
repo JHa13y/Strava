@@ -14,12 +14,31 @@ activities = []
 def main(year, month, day):
     """Manual Testing of Scrubbing"""
     start = datetime.datetime(year, month, day)
+    if month != 1 and day != 1:
+        print("Assuming only single year stats!")
+        end = datetime.datetime(year, 12, 31)
+    else:
+        end = datetime.datetime.now()
     client = authorize.get_authorized_client(username)
     act_manager = ActivityManager(client)
     athlete = client.get_athlete()
-
+    total_road = 0
+    total_virtual = 0
     metric_in_meters = 100000
-    acts = client.get_activities(after=start)
+    acts = client.get_activities(after=start, before=end)
+    for act in acts:
+        if act.external_id is not None:
+            if "trainerroad" in act.external_id or "zwift" in act.external_id:
+                total_virtual += unithelper.miles(act.distance).get_num()
+            elif act.type == 'Ride':
+                total_road += unithelper.miles(act.distance).get_num()
+        elif act.type == 'Ride':
+            total_road += unithelper.miles(act.distance).get_num()
+
+    print("Stats for Period from {} to {}".format(start, end))
+    print("Outside distance: " + '{:6.2f}'.format(total_road))
+    print("Virtual distance: " + '{:6.2f}'.format(total_virtual))
+
     #acts = act_manager.get_activities(after=start, distance_min=metric_in_meters);
     count =1;
     print("Century (>100mi) Stats since: " + str(start))
@@ -37,7 +56,7 @@ def main(year, month, day):
     print("Metric Centuries (>=62mi and <100mi) Stats since: " + str(start))
     for act in acts:
         distance = unithelper.miles(act.distance).get_num()
-        if distance < 100:
+        if 62 <= distance < 100:
             print(str(count) + ": distance: " + '{:6.2f}'.format(distance) + " miles on Event: " + act.name + " " + str(
                 act.start_date_local))
             count = count + 1
